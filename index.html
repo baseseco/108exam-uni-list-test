@@ -1,0 +1,906 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<base target="_self" />
+<meta http-equiv="Content-Type" content="text/html; charset=big5" />
+<meta name="keywords" content="選填志願,大學入學" />
+<meta name="description" content="網路選填志願系統" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<title>１０８登記分發志願【單機版】</title>
+<script type='text/javascript' src='script/config.js'></script>
+<script type='text/javascript' src='script/dept.js'></script>
+<script type='text/javascript' src='script/jquery.min.js'></script>
+<script type='text/javascript' src='script/jquery-ui.min.js'></script>
+<script type='text/javascript' src='script/jquery.vticker.min.js'></script>
+<link href='css/jquery-ui-1.8.11.custom.css' rel="stylesheet" type="text/css"/>
+<link href="css/my_layout.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+/* 單機版 */
+#header{
+    background:url("images/top_single.gif") no-repeat scroll 0 0 transparent;
+    height:120px;
+    overflow:hidden;
+}
+</style>
+<script type="text/javascript">
+window.onload = function()
+{
+   //document.documentElement.style.overflowX = 'hidden';
+   //document.body.style.overflowX = 'hidden';
+}
+var main_url = '';
+//學年度
+var syear = 108;
+
+//考試科目
+var cTime = 0;
+
+//性別: (1)男(2)女
+var sex = 1;
+//增加總分:k%
+var favor = 0;
+//score
+var score = {
+	cScore:{},
+	sScore:{},
+	sScore_tot:{},
+	tScore:{ 0:{}, 1:{}, 2:{}}
+};
+
+//考試科目(integer轉2進位)
+var examCount = 0;
+/*
+ * 志願表
+ */
+var volunTab = null;
+var version = 'web';
+var domain  = 'localhost';
+
+var chgsco_check   = '';
+var chgsco_message = '';
+var chgsco_course  = '';
+var chgsco_flag    = '';
+var chgsco_checkpoint    = '';
+var chgsco_yn    = '';
+$(document).ready(function() {
+		//點選登出按鈕
+	$('#leave').click(function(){
+		//利用暫存志願按鈕disabled決定登出時是否需要詢問
+		var is_cansave = !($("#saveVol").attr('disabled'));		
+		//是否已完成登記志願判斷，若已完成登出不做saveVol
+		if($('#marquee ul').length!=0 && is_cansave)
+		{			
+			$("#leave_check").dialog({
+				width:250,				
+    	    	resizable: false, 
+    	    	buttons: {    	    		
+					"暫存": function() {  //"關閉"
+					
+						window.savenum=5;
+						$("#saveVol").trigger('click');	
+						if(window.is_savesuccess=='Y'){
+							window.close();
+						}else{
+							alert('很抱歉，志願暫存失敗，請再試一次!');
+						}
+						
+					},
+					"不要暫存": function() {  //"關閉"
+						$( this ).dialog( "close" );
+						window.close();
+						
+					},					    	    		
+					"取消": function() {  //"關閉"
+						$( this ).dialog( "close" );
+						
+					}
+				}
+			});			
+		}
+		else
+		{
+			window.close();
+		}
+		
+		
+	});
+	        var nowInMS = new Date().getTime();
+    var expireDate = new Date("july 1, 2020 00:00:00").getTime();
+    if( nowInMS > expireDate){ 
+        $("body").html('');
+        var out = "很抱歉，108學年度單機版已到期!!\n";
+        out += "請至大學考試入學分發委員會網站\n\n http://www.uac.edu.tw \n\n";
+        out += "下載109學年度單機版的最新版本。";
+        alert(out);
+        window.opener = null;    
+        window.close(); 
+        top.close();
+        exit(0);
+    }version = 'single'
+    $('#info').tabs();
+    
+    $("#main").tabs( "option", "disabled", [] );
+    
+    //性別
+    $('#sex1').click(function(){
+        sex = 1;
+        volunTab.render();
+    });
+    
+    $('#sex2').click(function(){
+        sex = 2;
+        volunTab.render();
+    });
+   
+    //專業人才
+    $('#expert').click(function(){
+        var checked = $(this).attr('checked');      
+        if(checked){
+        	expert=2;
+        }else{
+        	expert=1;
+        }
+        volunTab.render();
+    });
+
+    //英檢
+    $('#listen').change(function(){
+    	if($(this).val()=='O'){
+    		listen_score='-';
+    		listen_basic='2';
+    	}else{
+     		listen_score = $(this).val();
+    		listen_basic='1';   		
+    	}    	
+        volunTab.render();
+    });
+       
+    //特種生
+    $('#id_desclist').change(function(){
+        favor = $(this).val(); 
+        volunTab.render();
+    });
+	//特種生
+    $('#id_type_ok').change(function(){      
+        id_type_ok = $(this).val(); //20190403 add
+        volunTab.render();
+    });
+    //學測成績
+    $('#c_sco input').bind('click',function(){
+        var entryType = $(this).attr('type');
+        //var sid = $(this).attr('id').match('exam([0-9]{1,})');
+		var sid = $(this).attr('id').replace('basic','');
+        switch(entryType){
+            case 'checkbox':
+                var checked = $(this).attr('checked');
+                var idx = sid[1];
+
+                if(checked){
+                    //enable text input
+                    $('#'+'basic'+sid[0]).removeAttr('disabled');
+
+                    //set score = 0
+
+                    score.cScore[idx] = 0;
+                    examCount = (examCount | Math.pow(2,idx));
+                } else {
+                    //disable text input
+                    $('#'+'basic'+sid[0]).attr('disabled','disabled');
+
+                    //remove score
+                    $('#'+'basic'+sid[0]).val('0');
+                    score.cScore[idx] = undefined;
+                    examCount = (examCount & ~(Math.pow(2,idx)));
+                }
+
+                //設定考生可選取的組合
+                volunTab.createFilter();
+                break;
+            case 'text':
+            default:
+                break;
+        }
+        
+        //redraw table
+        volunTab.render();
+    }).bind('blur',function(){
+        var totCscore = 0;
+        var v = $(this).val() - 0;
+        var sid = $(this).attr('id').replace('basic','');
+
+        //檢查輸入值是否為number
+        if(isNaN(v) || !v){ $(this).val('0'); v=0;}
+        
+        //成績必須介於0~15分之間
+        if(v < 0 || v > 15){
+            alert(STRING_TABLE_BASIC[sid]+'學測級分必需介於0~15之間');
+            $(this).val(0);
+        }
+		//.x 要改設為0
+		else if(Math.floor(v)==0){
+			$(this).val(0);
+		}
+		//x. 要改設為x
+		else{
+			$(this).val(v);
+		}
+
+        for(var i = 0;i < 5; i++){
+            totCscore += $('#basic'+i).val() - 0;
+
+            //set score
+            score.cScore[i] = $('#basic'+i).val() - 0;
+        }
+        $('#basic5').val(totCscore);
+        score.cScore[5] = totCscore;
+        volunTab.render();
+    }).bind('mousedown',function(){
+       document.onselectstart = function(){return true;};
+    }).bind('mouseup',function(){
+       document.onselectstart = function(){return false;};
+    });
+
+    //指考成績
+    $("#s_sco input").bind('click',function(){
+        var entryType = $(this).attr('type');
+        var sid = $(this).attr('id').match('exam([0-9]{1,})');
+
+        switch(entryType){
+            case 'checkbox':
+                var checked = $(this).attr('checked');
+                var idx = sid[1];
+
+                if(checked){
+                    //enable text input
+                    $('#'+sid[0]+'_score').removeAttr('disabled');
+
+                    //set score = 0
+
+                    score.sScore[idx] = 0;
+                    examCount = (examCount | Math.pow(2,idx));
+                } else {
+                    //disable text input
+                    $('#'+sid[0]+'_score').attr('disabled','disabled');
+
+                    //remove score
+                    $('#'+sid[0]+'_score').val('0');
+                    score.sScore[idx] = undefined;
+                    examCount = (examCount & ~(Math.pow(2,idx)));
+                }
+
+                //設定考生可選取的組合
+                volunTab.createFilter();
+                break;
+            case 'text':
+            default:
+                break;
+        }
+        
+        //redraw table
+        volunTab.render();
+    }).bind('mousedown',function(){
+       document.onselectstart = function(){return true;};
+    }).bind('mouseup',function(){
+       document.onselectstart = function(){return false;};
+    }).bind("blur",function(){
+        var sid = $(this).attr('id').match('exam([0-9]{1})_score');
+        if(!sid) return true;
+        
+        var nu = sid[1];
+        var v = $(this).val() - 0;
+        
+        //檢查輸入值是否為number
+        if(isNaN(v) || !v){ $(this).val('0'); v=0;}
+        
+        //成績必須介於0~100分之間
+        if(v < 0 || v > 100){
+            alert('請輸入0~100的數字');
+            $(this).val(0);
+            v = 0;
+        }else{
+        	//小數點後若有三位，無條件捨去變兩位
+			var arFloat = ('' + v).split('.'); 
+			if(arFloat.length > 1 && arFloat[1].length > 2){				
+				v=Math.floor(v * 100) / 100
+				$(this).val(v);
+			}
+        }
+
+        //紀錄成績
+        score.sScore[nu] = v;
+        $(this).val(v);
+        volunTab.render();
+    });
+
+    //術科成績
+    $('#t_sco input').click(function(){
+        var entryType = $(this).attr('type');
+        var sid = $(this).attr('id').match('([a-z]{1,})([0-9]{0,})');
+
+        switch(entryType){
+            case 'checkbox':
+
+                var checked = $(this).attr('checked');
+
+                if(checked){
+                    //enable text input
+                    $('#'+sid[0]+'_score').removeAttr('disabled');
+
+                    //set score = 0
+                    var idx = sid[2];
+                    var skill_index = eval('STRING_TABLE_SKILL.'+sid[1]);
+                    score.tScore[skill_index][idx] = 0;
+                    examCount = (examCount | Math.pow(2,skill_index+10));
+                } else {
+                    //disable text input
+                    $('#'+sid[0]+'_score').attr('disabled','disabled');
+
+                    //remove score
+                    $('#'+sid[0]+'_score').val('0');
+                    var idx = sid[2];
+                    var skill_index = eval('STRING_TABLE_SKILL.'+sid[1]);
+                    score.tScore[skill_index][idx] = undefined;
+
+                    //remove exam count
+                    var cnt = 0;
+                    for(var i in score.tScore[skill_index]){
+                        if(score.tScore[skill_index][i] >= 0){
+                            cnt++;
+                        }
+                    }
+
+                    if(cnt == 0){
+                        examCount = (examCount & ~(Math.pow(2,skill_index+10)));
+                    }
+                }
+
+                //redraw table
+                volunTab.createFilter();
+
+                break;
+            case 'text':
+            default:
+                break;
+        }
+        volunTab.render();              
+    }).bind('blur',function(){
+        var sid = $(this).attr('id').match('([a-z]{1,})([0-9]{0,})_score');
+        if(!sid) return true;
+
+        var nu = sid[2];
+        var v = $(this).val() - 0;
+        
+        //檢查輸入值是否為number
+        if(isNaN(v) || !v){ $(this).val('0'); v=0;}
+        
+        //成績必須介於0~100分之間
+        if(v < 0 || v > 100){
+            alert('請輸入0~100的數字');
+            $(this).val(0);
+            v = 0;
+        }else{
+        	//小數點後若有三位，無條件捨去變兩位
+			var arFloat = ('' + v).split('.'); 
+			if(arFloat.length > 1 && arFloat[1].length > 2){				
+				v=Math.floor(v * 100) / 100
+				$(this).val(v);
+			}
+        }
+
+        //紀錄成績
+        var skill_index = eval('STRING_TABLE_SKILL.'+sid[1]);
+        score.tScore[skill_index][nu] = v;
+        $(this).val(v);
+        volunTab.render();
+    }).bind('mousedown',function(){
+       document.onselectstart = function(){return true;};
+    }).bind('mouseup',function(){
+       document.onselectstart = function(){return false;};
+    });
+
+    
+});
+//時鐘同步
+function syncTime(){
+	$.ajax({
+		url: 'clock.php',
+		async: false,
+		success:function(msg, textStatus, XMLHttpRequest){
+			eval(msg);
+		}
+	});
+	setTimeout('syncTime()',60000);
+}
+
+//倒數計時
+var remain   = 0;
+function countDown(){
+	//剩餘時間 = 0 就不倒數
+	if(remain <= 0){
+		$('#countdown').html('系統即將關閉，請盡速完成登記分發志願');
+		return;
+	}
+
+	//倒數計時
+    var rS = (remain % 60);
+    var rM = Math.floor(remain/60);
+    $("#cdownM").html(rM);
+    $("#cdownS").html(rS);
+    remain--;
+    setTimeout("countDown()", 1000);
+}
+
+//目前時間
+function clock(){
+	var d = new Date();
+	d.setTime(cTime);
+	var out = '';
+	var y = d.getFullYear() - 1911;
+	var mon = d.getMonth() + 1;
+	out += y+'年';
+	out += mon+'月';
+	out += d.getUTCDate()+'日';
+	out += (d.getHours()+':').lpad('0',3);
+	out += (d.getUTCMinutes()+':').lpad('0',3);
+	out += (d.getSeconds()+'').lpad('0',2);
+
+	//輸出
+	$('#currTime').text(out);
+	cTime = d.valueOf() + 1000;
+	//每秒計時
+	setTimeout('clock()',1000);
+}
+
+String.prototype.lpad = function(padString, length) {
+	var str = this;
+    while (str.length < length)
+        str = padString + str;
+    return str;
+}
+String.prototype.replaceIndex = function(idx, str) {
+	var buffer = '';
+    for(var i = 0;i< this.length;i++){
+        var s = (i==idx) ? str :this[i];
+    	buffer += s;
+    }
+    return buffer;
+}
+
+/**
+ * 為了避免不同的瀏覽器Math.round和Number.toFixed的結果不一樣
+ * 所以在Number底下新增一個function
+ */
+Number.prototype.round = function(precision){
+	var addition = Math.pow(0.1,precision+5);
+	var nu =  this + addition;
+	return nu.toFixed(precision);
+};
+
+</script>
+<script type='text/javascript' src='script/menu.js'></script>
+<script type='text/javascript' src='script/power_table.js'></script>
+<!--[if lte IE 6]>
+<script type="text/javascript" src="script/minmax.js"></script>
+<![endif]-->
+</head>
+<body>
+  <div class="page_margins">
+    <!-- end: skip link navigation -->
+    <div class="page">
+      <div id="header">
+        <div class="subcolumns">
+          <div class="c25l">
+            <div class="subcl">
+              <!-- Logout and current time -->
+              	<div style='min-height:60px;'></div>
+            </div>
+          </div>
+          <div class="c75r">
+            <div id='info' class="subcl">
+              <!-- Information -->
+              	<ul>
+		<li><a href="#info1" >基本資料</a></li>
+		<li><a href="#info2" >考試分數</a></li>
+		<li><a href="#info3" >術科分數</a></li>
+	</ul>
+	<!-- 基本資料 -->
+	<div id='info1'>
+		<table style="height:85px;">
+			<tr>
+				<td class="td1" rowspan="3">
+				<b>基本資料</b>
+				</td>
+				<td>
+					<label for='sex1'>男</label>
+						<input type="radio" class="cbx" name="sexz" id="sex1" value="1" checked="checked" />
+					<label for='sex2'>女</label>
+						<input type="radio" class="cbx" name="sexz" id="sex2" value="2" /><br>
+					
+					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for='id_type_ok'>身份別：</label>
+					<select id="id_type_ok">
+						<option value="1" selected="selected" >普通生</option>
+						<option value="2">退伍軍人</option>
+						<option value="4">原住民</option>
+						<option value="C">蒙藏生</option>
+						<option value="E">僑生</option>
+						<option value="G">境外優秀科技人才子女</option>
+						<option value="X">政府派外工作人員子女</option>
+					</select>  
+					<!--<label for='id_desclist'>增加總分</label> 
+					 <select id="id_desclist">					 
+					 	<option value="0" selected="selected" >無</option>
+						<option value="0.03">3%</option>
+						<option value="0.05">5%</option>
+						<option value="0.08">8%</option>
+						<option value="0.10">10%</option>
+						<option value="0.15">15%</option>
+						<option value="0.20">20%</option>
+						<option value="0.25">25%</option>
+						<option value="0.35">35%</option>  
+					</select>-->
+				  
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="checkbox" id="expert" name="expert" class="cbx" />
+					<label for='expert'>適用「登記分發及入學資格」第18款報名之考生</label><image id='expert_info' src='images/question.png' style='width:15px;cursor:pointer'></image>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<!-- 考試分數 -->
+	<div id='info2'>
+		<!-- 學測分數 -->
+		
+		<table id='c_sco'>
+			<tr>
+				<td class="td1"><b>學測級分:</b></td>
+													<td style='padding-top:7px;margin:0px;width:40px;'>
+					<div><input type="checkbox" id="basic0_ckb" class="cbx" />國文</div>
+					<div><input type="text" id="basic0" maxlength="2" value="0" size='3' disabled="disabled" /></div>
+				<!--	<div >國文</div>
+										<div><input type="text" id="basic0" maxlength="2" value="0" size='3'  /></div> -->
+				</td>
+				
+													<td style='padding-top:7px;margin:0px;width:40px;'>
+					<div><input type="checkbox" id="basic1_ckb" class="cbx" />英文</div>
+					<div><input type="text" id="basic1" maxlength="2" value="0" size='3' disabled="disabled" /></div>
+				<!--	<div >英文</div>
+										<div><input type="text" id="basic1" maxlength="2" value="0" size='3'  /></div> -->
+				</td>
+				
+													<td style='padding-top:7px;margin:0px;width:40px;'>
+					<div><input type="checkbox" id="basic2_ckb" class="cbx" />數學</div>
+					<div><input type="text" id="basic2" maxlength="2" value="0" size='3' disabled="disabled" /></div>
+				<!--	<div >數學</div>
+										<div><input type="text" id="basic2" maxlength="2" value="0" size='3'  /></div> -->
+				</td>
+				
+													<td style='padding-top:7px;margin:0px;width:40px;'>
+					<div><input type="checkbox" id="basic3_ckb" class="cbx" />社會</div>
+					<div><input type="text" id="basic3" maxlength="2" value="0" size='3' disabled="disabled" /></div>
+				<!--	<div >社會</div>
+										<div><input type="text" id="basic3" maxlength="2" value="0" size='3'  /></div> -->
+				</td>
+				
+													<td style='padding-top:7px;margin:0px;width:40px;'>
+					<div><input type="checkbox" id="basic4_ckb" class="cbx" />自然</div>
+					<div><input type="text" id="basic4" maxlength="2" value="0" size='3' disabled="disabled" /></div>
+				<!--	<div >自然</div>
+										<div><input type="text" id="basic4" maxlength="2" value="0" size='3'  /></div> -->
+				</td>
+				
+								<td class="td1"><b>英語聽力成績:</b></td>
+				<td>
+					<select id="listen">
+						<option value="-" selected="selected" >無</option>	
+						<option value="A">Ａ級</option>
+						<option value="B">Ｂ級</option>
+						<option value="C">Ｃ級</option>
+						<option value="F">Ｆ級</option>
+						<option value="O">免檢定</option>											
+					</select>
+				</td>
+			</tr>
+		</table>
+
+		<table id='s_sco'>
+			<tr>
+				<td>
+				<b>指考成績:</b>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam0" class="cbx" />國文</div>
+					<div><input type="text" id="exam0_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam1" class="cbx" />英文</div>
+					<div><input type="text" id="exam1_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam2" class="cbx" />數學甲</div>
+					<div><input type="text" id="exam2_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam3" class="cbx" />數學乙</div>
+					<div><input type="text" id="exam3_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam4" class="cbx" />歷史</div>
+					<div><input type="text" id="exam4_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam5" class="cbx" />地理</div>
+					<div><input type="text" id="exam5_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam6" class="cbx" />物理</div>
+					<div><input type="text" id="exam6_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam7" class="cbx" />化學</div>
+					<div><input type="text" id="exam7_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam8" class="cbx" />生物</div>
+					<div><input type="text" id="exam8_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+								<td style='padding:0px;margin:0px;'>
+					<div><input type="checkbox" id="exam9" class="cbx" />公民與社會</div>
+					<div><input type="text" id="exam9_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
+				</td>
+							</tr>
+		</table>
+	</div>
+	<!-- 術科分數 -->
+	<div id='info3'>
+	<table id='t_sco'>
+		<tr>
+			<td rowspan="3" style='width:64px;height:81px;'><b>術科成績:</b></td>
+			<td style='width:28px'>音樂</td>
+						<td style='padding:0px;margin:0px;'>
+				<span><input type="checkbox" class="cbx" id='music0' />主修</span>
+	 	      	<input name="text" type="text" class='ipx' id="music0_score" value="0" size="2" maxlength="5" disabled="disabled" />
+			</td>
+						<td style='padding:0px;margin:0px;'>
+				<span><input type="checkbox" class="cbx" id='music1' />副修</span>
+	 	      	<input name="text" type="text" class='ipx' id="music1_score" value="0" size="2" maxlength="5" disabled="disabled" />
+			</td>
+						<td style='padding:0px;margin:0px;'>
+				<span><input type="checkbox" class="cbx" id='music2' />樂理</span>
+	 	      	<input name="text" type="text" class='ipx' id="music2_score" value="0" size="2" maxlength="5" disabled="disabled" />
+			</td>
+						<td style='padding:0px;margin:0px;'>
+				<span><input type="checkbox" class="cbx" id='music3' />視唱</span>
+	 	      	<input name="text" type="text" class='ipx' id="music3_score" value="0" size="2" maxlength="5" disabled="disabled" />
+			</td>
+						<td style='padding:0px;margin:0px;'>
+				<span><input type="checkbox" class="cbx" id='music4' />聽寫</span>
+	 	      	<input name="text" type="text" class='ipx' id="music4_score" value="0" size="2" maxlength="5" disabled="disabled" />
+			</td>
+					</tr>
+		<tr>
+			<td>美術</td>
+						<td style='padding:0px;margin:0px;width:118px;'>
+				<span><input type="checkbox" class="cbx" id='art0' />素描</span>
+				<span><input type="text"  class='ipx' id='art0_score' value="0" size="2" maxlength="5" disabled="disabled" />
+				</span>
+			</td>
+						<td style='padding:0px;margin:0px;width:118px;'>
+				<span><input type="checkbox" class="cbx" id='art1' />創意表現</span>
+				<span><input type="text"  class='ipx' id='art1_score' value="0" size="2" maxlength="5" disabled="disabled" />
+				</span>
+			</td>
+						<td style='padding:0px;margin:0px;width:118px;'>
+				<span><input type="checkbox" class="cbx" id='art2' />美術鑑賞</span>
+				<span><input type="text"  class='ipx' id='art2_score' value="0" size="2" maxlength="5" disabled="disabled" />
+				</span>
+			</td>
+						<td style='padding:0px;margin:0px;width:118px;'>
+				<span><input type="checkbox" class="cbx" id='art3' />彩繪技法</span>
+				<span><input type="text"  class='ipx' id='art3_score' value="0" size="2" maxlength="5" disabled="disabled" />
+				</span>
+			</td>
+						<td style='padding:0px;margin:0px;width:118px;'>
+				<span><input type="checkbox" class="cbx" id='art4' />水墨書畫</span>
+				<span><input type="text"  class='ipx' id='art4_score' value="0" size="2" maxlength="5" disabled="disabled" />
+				</span>
+			</td>
+					</tr>
+		<tr>
+			<td>體育</td>
+			<td style='padding:0px;margin:0px;width:118px;'>
+				<span><input type="checkbox" id="sport0" class="cbx" />體育</span>
+				<span><input type="text"  class='ipx' id='sport0_score' value="0" size="2" maxlength="5" disabled="disabled" /></span>
+			</td>
+			<td colspan='4'>&nbsp;</td>
+		</tr>
+	</table>
+	</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="nav"><!--
+                    <marquee scrolldelay="120" scrollamount="4" style='width: 750px;'>移動志願順序用滑鼠拖曳即可．．．．<b style='color:red'>不符合錄取條件者會以紅字顯示</b>．．．．刪除志願請點滑鼠左鍵兩下．．．．</marquee>
+              --></div>
+      <div id="main">
+        <div id='selevolinfo'>&nbsp;</div>
+<!-- 單機版/練習版 -->
+<ul>
+    <li><a href="#layer1" class='mainTab' >志願選填</a></li>
+    <li><a href="#layer2" class='mainTab' id='createVol'>產生志願碼</a></li>
+    <li>
+    	<div id='countdown'>
+		    <div id="marquee">
+			  <ul>
+			  	<li>&nbsp;</li>		  
+			  </ul>
+			</div>
+		<div>
+	</li>
+    <li style='float:right'><input type='button' class='trash' id='clearVol' value='刪除暫存檔'></input></li>
+</ul>
+
+	          
+      	<!--  志願選填畫面 -->
+      	<div id='layer1'>
+      					<div>
+			<form name="check100Form" method="post" action="">
+			<button name='school_dept_info' id='school_dept_info'>依校系選志願</button>
+			<button name='select_vol' id='select_vol'>依條件選志願</button>
+			<button name='add_one_vol' id='add_one_vol'>直接輸入系組代碼</button>
+			<button name='pasteVol' id='pasteVol'>貼上志願碼</button>				
+			<button name='clearScreen' id='clearScreen'>刪除全部志願</button>
+			<button name='printScreen' id='printScreen'>列印此頁</button>
+			</form>
+			</div>
+			<span id="addMsg"></span><br/>
+				      	<div id='volun' style="">
+	      	</div>
+      	</div>
+      	<!-- 產生志願碼 -->
+      	<div id='layer2' class='hide'>
+      		<p>可以複製下方志願資料，以供登入登記分發志願系統後上傳志願碼使用</p>
+      		<textarea id="vol_data" name="vol_data" cols="70" rows="6" readonly="readonly"></textarea><br/>
+      		<button id='l2_goweb' value="" >前往網路登記分發志願</button>
+      		<span id="d_clip_container">
+      		    <button id='l2_copy' title='若無法使用選取複製功能，請使用快捷鍵(Ctrl+c)複製志願碼'>選取複製</button>
+            </span>
+      	</div>
+
+
+
+      	      </div>
+      <!-- begin: #footer -->
+      <div id="footer"></div>
+    </div>
+  </div>
+
+  <!-- 『其他選單』  -->
+
+  <!-- 依校系選志願2 -->
+  <div id="div_list_dept" title="依校系選志願">
+    <label for='list_school'>學校：</label><select id='list_school'></select>
+    <hr style="clear:both" />
+    <br/>
+    <dl style="text-align:left;height:350px;overflow-y:auto;">
+        <!-- 校系選單 -->
+    </dl>
+  </div>
+    
+  <!-- 直接輸入校系代碼 -->
+  <div id="div_one_canid" class="optionalMenu" title='直接輸入系組代碼'>
+    <dl>       
+        <dd><input type="text" maxlength="4" id="iptCanID" name="iptCanID" style='margin:5px;'/></dd>
+        <div id='one_canid_info' style='padding-left: 8px'></div>
+    </dl>
+  </div>
+
+  <!-- 依條件選志願 -->
+  <div id="filterArea" class="optionalMenu" title='依條件選志願'>
+    <ul class='ul_inline' >
+	    <li style='background:#fff;width:290px;height:350px;border:1px solid #000;'>   	
+	       <form id='myFilterForm' name='myFilterForm' action="" style='padding:0px;margin:0px;'>
+	           <!-- 排版 -->
+	           <ul id='myFilter'>
+					<li>
+					    <label for='filter_school'>學校</label><select id='filter_school' name='filter_school'></select>
+					</li>
+					<li><label for='filter_gcd'>學群</label><select id='filter_gcd' name='filter_gcd'></select></li>
+					<li><label for='filter_mcd'>學類</label><select id='filter_mcd' name='filter_mcd'></select></li>
+					<li>採計科目組合</li>
+					<li>
+					    <div id='filter_pattern'>
+					        <input type='checkbox' id='pattern_select_all' />選取全部組合
+							&nbsp
+							<button  type="button" name='partial_subject' id= 'partial_subject'>科目過濾</button>
+							<span id='ps_msg'></span>  				    	
+					        <ul id='pattern_entries'>
+					        </ul>
+					    </div>
+					</li>
+					<li>
+					    <button id='doFilter'>開始篩選</button>
+					    <input type="checkbox" name='helpMe' id='helpMe'/>幫我過濾
+					</li>
+	           </ul>
+	       </form>
+	    </li>
+	    <li  style='background:#fff;width:472px;height:350px;margin-left:5px;border:1px solid #000;'>
+	       <form id='myResult' action=""></form>
+	    </li>
+    </ul>
+  </div>
+
+  <!-- 顯示志願明細 -->
+  <div id="showmsg" title="注意"></div>
+  
+  <!-- 顯示志願明細 -->
+  <div id="showVolInfo"></div>
+
+  <!-- 複製志願 -->
+  <div id="cloneVolDIV"></div>
+  <!--  貼上志願碼 -->
+  <div id='pasteVolDIV' class="optionalMenu" title='貼上志願碼'>
+	<p>若考生已於單機版產生志願碼，可於此處貼上已選志願。</p>
+	<textarea name="inputVolTextarea" id='inputVolTextarea' cols="70" rows="6" style='height:120px;'></textarea><br/>
+	<input type="button" id='pasteVoluns' value="確定" />
+	<input type="button" id='cancelPaste' class='restore' value="取消" />
+	<input type="button" id='winPaste' value="貼上志願碼" title='若無法使用貼上志願碼功能，請使用快捷鍵(Ctrl+v)貼上志願碼'/>
+  </div>
+  <div id='stud_name_info' style='display:none' title="提醒">
+  	若您的姓名出現亂碼，請核對右側基本資料正確無誤即可;<br/>
+  	或請<a href="http://www2.uac.edu.tw/108data/108FONTS.msi" target="_blank"><span style='color:#CC6600;font-size:16px;font-weight:bolder'>按此下載</span></a> 
+  	並安裝造字檔。
+  </div>
+  <div id='leave_check' style='display:none' title="登出確認">
+  	是否暫存志願?
+  </div> 
+  <div id='dialog_msg'>
+  	
+  </div>
+  
+  <!-- 108學年度新增-考生尚未完成登記 -->
+  <div class='chg_stusco_dia' id='change_stud_score1' style='display:none' title="成績複查結果異動">
+  	<p>
+  		<span class='chg_stusco_dia_highlight'>您的指考成績經複查結果有變更</span>
+  		，現已完成資料更新，請依更新後成績完成志願選填，
+  		<span class='chg_stusco_dia_highlight'>完成後不得再變更志願。</span>
+  	</p>
+	<p>如對後續登記流程有疑問，可洽詢考分會（TEL:06-2362755），</p>
+	<p>如對成績複查結果有異議，請另洽大學入學考試中心(TEL:02-23661416)，成績異動內容如下：</p>
+	<p class='chg_stusco_dia_result'></p>
+	
+
+  </div>
+  	
+  <!-- 108學年度新增-考生已完成登記 -->
+  <div class='chg_stusco_dia' id='change_stud_score2' style='display:none'  title="成績複查結果異動">
+  	<p>
+  		<span class='chg_stusco_dia_highlight'>您的指考成績經複查結果有變更</span>
+  		，請確實了解成績異動內容並
+  		<span class='chg_stusco_dia_highlight'>於7/28下午4:30前回傳是否變更志願之聲明書至考分會</span>
+  		，相關流程請參閱聲明書範本或洽詢考分會（TEL:06-2362755）。
+  	</p>
+	<p>如對成績複查結果有異議，請另洽大學入學考試中心(TEL:02-23661416)，成績異動內容如下：</p>
+	<p class='chg_stusco_dia_result'></p>
+	<div style='text-align: center'>
+		
+		<input type='button' id='chgsco_form1_btn' class='chg_stusco_dia_download' name='giveup1' value='下載放棄變更志願聲明書範本'>
+	</div>
+	<div style='text-align: center'>		
+		<input type='button' id='chgsco_form2_btn' class='chg_stusco_dia_download' name='giveup2' value='下載註銷志願重新登記聲明書範本'>
+	</div>	
+　                 
+  </div>
+      
+</body>
+</html>
