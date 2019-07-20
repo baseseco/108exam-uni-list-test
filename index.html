@@ -1,13 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
+	
 <base target="_self" />
 <meta http-equiv="Content-Type" content="text/html; charset=big5" />
-<meta name="keywords" content="¿ï¶ñ§ÓÄ@,¤j¾Ç¤J¾Ç" />
-<meta name="description" content="ºô¸ô¿ï¶ñ§ÓÄ@¨t²Î" />
+<meta name="keywords" content="é¸å¡«å¿—é¡˜,å¤§å­¸å…¥å­¸" />
+<meta name="description" content="ç¶²è·¯é¸å¡«å¿—é¡˜ç³»çµ±" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
-<title>¢°¢¯¢·µn°O¤Àµo§ÓÄ@¡i³æ¾÷ª©¡j</title>
+<title>ï¼‘ï¼ï¼˜ç™»è¨˜åˆ†ç™¼å¿—é¡˜ã€å–®æ©Ÿç‰ˆã€‘</title>
 <script type='text/javascript' src='script/config.js'></script>
 <script type='text/javascript' src='script/dept.js'></script>
 <script type='text/javascript' src='script/jquery.min.js'></script>
@@ -16,7 +17,7 @@
 <link href='css/jquery-ui-1.8.11.custom.css' rel="stylesheet" type="text/css"/>
 <link href="css/my_layout.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-/* ³æ¾÷ª© */
+/* å–®æ©Ÿç‰ˆ */
 #header{
     background:url("images/top_single.gif") no-repeat scroll 0 0 transparent;
     height:120px;
@@ -30,15 +31,15 @@ window.onload = function()
    //document.body.style.overflowX = 'hidden';
 }
 var main_url = '';
-//¾Ç¦~«×
+//å­¸å¹´åº¦
 var syear = 108;
 
-//¦Ò¸Õ¬ì¥Ø
+//è€ƒè©¦ç§‘ç›®
 var cTime = 0;
 
-//©Ê§O: (1)¨k(2)¤k
+//æ€§åˆ¥: (1)ç”·(2)å¥³
 var sex = 1;
-//¼W¥[Á`¤À:k%
+//å¢åŠ ç¸½åˆ†:k%
 var favor = 0;
 //score
 var score = {
@@ -48,10 +49,10 @@ var score = {
 	tScore:{ 0:{}, 1:{}, 2:{}}
 };
 
-//¦Ò¸Õ¬ì¥Ø(integerÂà2¶i¦ì)
+//è€ƒè©¦ç§‘ç›®(integerè½‰2é€²ä½)
 var examCount = 0;
 /*
- * §ÓÄ@ªí
+ * å¿—é¡˜è¡¨
  */
 var volunTab = null;
 var version = 'web';
@@ -64,34 +65,34 @@ var chgsco_flag    = '';
 var chgsco_checkpoint    = '';
 var chgsco_yn    = '';
 $(document).ready(function() {
-		//ÂI¿ïµn¥X«ö¶s
+		//é»é¸ç™»å‡ºæŒ‰éˆ•
 	$('#leave').click(function(){
-		//§Q¥Î¼È¦s§ÓÄ@«ö¶sdisabled¨M©wµn¥X®É¬O§_»İ­n¸ß°İ
+		//åˆ©ç”¨æš«å­˜å¿—é¡˜æŒ‰éˆ•disabledæ±ºå®šç™»å‡ºæ™‚æ˜¯å¦éœ€è¦è©¢å•
 		var is_cansave = !($("#saveVol").attr('disabled'));		
-		//¬O§_¤w§¹¦¨µn°O§ÓÄ@§PÂ_¡A­Y¤w§¹¦¨µn¥X¤£°µsaveVol
+		//æ˜¯å¦å·²å®Œæˆç™»è¨˜å¿—é¡˜åˆ¤æ–·ï¼Œè‹¥å·²å®Œæˆç™»å‡ºä¸åšsaveVol
 		if($('#marquee ul').length!=0 && is_cansave)
 		{			
 			$("#leave_check").dialog({
 				width:250,				
     	    	resizable: false, 
     	    	buttons: {    	    		
-					"¼È¦s": function() {  //"Ãö³¬"
+					"æš«å­˜": function() {  //"é—œé–‰"
 					
 						window.savenum=5;
 						$("#saveVol").trigger('click');	
 						if(window.is_savesuccess=='Y'){
 							window.close();
 						}else{
-							alert('«Ü©êºp¡A§ÓÄ@¼È¦s¥¢±Ñ¡A½Ğ¦A¸Õ¤@¦¸!');
+							alert('å¾ˆæŠ±æ­‰ï¼Œå¿—é¡˜æš«å­˜å¤±æ•—ï¼Œè«‹å†è©¦ä¸€æ¬¡!');
 						}
 						
 					},
-					"¤£­n¼È¦s": function() {  //"Ãö³¬"
+					"ä¸è¦æš«å­˜": function() {  //"é—œé–‰"
 						$( this ).dialog( "close" );
 						window.close();
 						
 					},					    	    		
-					"¨ú®ø": function() {  //"Ãö³¬"
+					"å–æ¶ˆ": function() {  //"é—œé–‰"
 						$( this ).dialog( "close" );
 						
 					}
@@ -109,9 +110,9 @@ $(document).ready(function() {
     var expireDate = new Date("july 1, 2020 00:00:00").getTime();
     if( nowInMS > expireDate){ 
         $("body").html('');
-        var out = "«Ü©êºp¡A108¾Ç¦~«×³æ¾÷ª©¤w¨ì´Á!!\n";
-        out += "½Ğ¦Ü¤j¾Ç¦Ò¸Õ¤J¾Ç¤Àµo©e­û·|ºô¯¸\n\n http://www.uac.edu.tw \n\n";
-        out += "¤U¸ü109¾Ç¦~«×³æ¾÷ª©ªº³Ì·sª©¥»¡C";
+        var out = "å¾ˆæŠ±æ­‰ï¼Œ108å­¸å¹´åº¦å–®æ©Ÿç‰ˆå·²åˆ°æœŸ!!\n";
+        out += "è«‹è‡³å¤§å­¸è€ƒè©¦å…¥å­¸åˆ†ç™¼å§”å“¡æœƒç¶²ç«™\n\n http://www.uac.edu.tw \n\n";
+        out += "ä¸‹è¼‰109å­¸å¹´åº¦å–®æ©Ÿç‰ˆçš„æœ€æ–°ç‰ˆæœ¬ã€‚";
         alert(out);
         window.opener = null;    
         window.close(); 
@@ -122,7 +123,7 @@ $(document).ready(function() {
     
     $("#main").tabs( "option", "disabled", [] );
     
-    //©Ê§O
+    //æ€§åˆ¥
     $('#sex1').click(function(){
         sex = 1;
         volunTab.render();
@@ -133,7 +134,7 @@ $(document).ready(function() {
         volunTab.render();
     });
    
-    //±M·~¤H¤~
+    //å°ˆæ¥­äººæ‰
     $('#expert').click(function(){
         var checked = $(this).attr('checked');      
         if(checked){
@@ -144,7 +145,7 @@ $(document).ready(function() {
         volunTab.render();
     });
 
-    //­^ÀË
+    //è‹±æª¢
     $('#listen').change(function(){
     	if($(this).val()=='O'){
     		listen_score='-';
@@ -156,17 +157,17 @@ $(document).ready(function() {
         volunTab.render();
     });
        
-    //¯SºØ¥Í
+    //ç‰¹ç¨®ç”Ÿ
     $('#id_desclist').change(function(){
         favor = $(this).val(); 
         volunTab.render();
     });
-	//¯SºØ¥Í
+	//ç‰¹ç¨®ç”Ÿ
     $('#id_type_ok').change(function(){      
         id_type_ok = $(this).val(); //20190403 add
         volunTab.render();
     });
-    //¾Ç´ú¦¨ÁZ
+    //å­¸æ¸¬æˆç¸¾
     $('#c_sco input').bind('click',function(){
         var entryType = $(this).attr('type');
         //var sid = $(this).attr('id').match('exam([0-9]{1,})');
@@ -194,7 +195,7 @@ $(document).ready(function() {
                     examCount = (examCount & ~(Math.pow(2,idx)));
                 }
 
-                //³]©w¦Ò¥Í¥i¿ï¨úªº²Õ¦X
+                //è¨­å®šè€ƒç”Ÿå¯é¸å–çš„çµ„åˆ
                 volunTab.createFilter();
                 break;
             case 'text':
@@ -209,19 +210,19 @@ $(document).ready(function() {
         var v = $(this).val() - 0;
         var sid = $(this).attr('id').replace('basic','');
 
-        //ÀË¬d¿é¤J­È¬O§_¬°number
+        //æª¢æŸ¥è¼¸å…¥å€¼æ˜¯å¦ç‚ºnumber
         if(isNaN(v) || !v){ $(this).val('0'); v=0;}
         
-        //¦¨ÁZ¥²¶·¤¶©ó0~15¤À¤§¶¡
+        //æˆç¸¾å¿…é ˆä»‹æ–¼0~15åˆ†ä¹‹é–“
         if(v < 0 || v > 15){
-            alert(STRING_TABLE_BASIC[sid]+'¾Ç´ú¯Å¤À¥²»İ¤¶©ó0~15¤§¶¡');
+            alert(STRING_TABLE_BASIC[sid]+'å­¸æ¸¬ç´šåˆ†å¿…éœ€ä»‹æ–¼0~15ä¹‹é–“');
             $(this).val(0);
         }
-		//.x ­n§ï³]¬°0
+		//.x è¦æ”¹è¨­ç‚º0
 		else if(Math.floor(v)==0){
 			$(this).val(0);
 		}
-		//x. ­n§ï³]¬°x
+		//x. è¦æ”¹è¨­ç‚ºx
 		else{
 			$(this).val(v);
 		}
@@ -241,7 +242,7 @@ $(document).ready(function() {
        document.onselectstart = function(){return false;};
     });
 
-    //«ü¦Ò¦¨ÁZ
+    //æŒ‡è€ƒæˆç¸¾
     $("#s_sco input").bind('click',function(){
         var entryType = $(this).attr('type');
         var sid = $(this).attr('id').match('exam([0-9]{1,})');
@@ -269,7 +270,7 @@ $(document).ready(function() {
                     examCount = (examCount & ~(Math.pow(2,idx)));
                 }
 
-                //³]©w¦Ò¥Í¥i¿ï¨úªº²Õ¦X
+                //è¨­å®šè€ƒç”Ÿå¯é¸å–çš„çµ„åˆ
                 volunTab.createFilter();
                 break;
             case 'text':
@@ -290,16 +291,16 @@ $(document).ready(function() {
         var nu = sid[1];
         var v = $(this).val() - 0;
         
-        //ÀË¬d¿é¤J­È¬O§_¬°number
+        //æª¢æŸ¥è¼¸å…¥å€¼æ˜¯å¦ç‚ºnumber
         if(isNaN(v) || !v){ $(this).val('0'); v=0;}
         
-        //¦¨ÁZ¥²¶·¤¶©ó0~100¤À¤§¶¡
+        //æˆç¸¾å¿…é ˆä»‹æ–¼0~100åˆ†ä¹‹é–“
         if(v < 0 || v > 100){
-            alert('½Ğ¿é¤J0~100ªº¼Æ¦r');
+            alert('è«‹è¼¸å…¥0~100çš„æ•¸å­—');
             $(this).val(0);
             v = 0;
         }else{
-        	//¤p¼ÆÂI«á­Y¦³¤T¦ì¡AµL±ø¥ó±Ë¥hÅÜ¨â¦ì
+        	//å°æ•¸é»å¾Œè‹¥æœ‰ä¸‰ä½ï¼Œç„¡æ¢ä»¶æ¨å»è®Šå…©ä½
 			var arFloat = ('' + v).split('.'); 
 			if(arFloat.length > 1 && arFloat[1].length > 2){				
 				v=Math.floor(v * 100) / 100
@@ -307,13 +308,13 @@ $(document).ready(function() {
 			}
         }
 
-        //¬ö¿ı¦¨ÁZ
+        //ç´€éŒ„æˆç¸¾
         score.sScore[nu] = v;
         $(this).val(v);
         volunTab.render();
     });
 
-    //³N¬ì¦¨ÁZ
+    //è¡“ç§‘æˆç¸¾
     $('#t_sco input').click(function(){
         var entryType = $(this).attr('type');
         var sid = $(this).attr('id').match('([a-z]{1,})([0-9]{0,})');
@@ -371,16 +372,16 @@ $(document).ready(function() {
         var nu = sid[2];
         var v = $(this).val() - 0;
         
-        //ÀË¬d¿é¤J­È¬O§_¬°number
+        //æª¢æŸ¥è¼¸å…¥å€¼æ˜¯å¦ç‚ºnumber
         if(isNaN(v) || !v){ $(this).val('0'); v=0;}
         
-        //¦¨ÁZ¥²¶·¤¶©ó0~100¤À¤§¶¡
+        //æˆç¸¾å¿…é ˆä»‹æ–¼0~100åˆ†ä¹‹é–“
         if(v < 0 || v > 100){
-            alert('½Ğ¿é¤J0~100ªº¼Æ¦r');
+            alert('è«‹è¼¸å…¥0~100çš„æ•¸å­—');
             $(this).val(0);
             v = 0;
         }else{
-        	//¤p¼ÆÂI«á­Y¦³¤T¦ì¡AµL±ø¥ó±Ë¥hÅÜ¨â¦ì
+        	//å°æ•¸é»å¾Œè‹¥æœ‰ä¸‰ä½ï¼Œç„¡æ¢ä»¶æ¨å»è®Šå…©ä½
 			var arFloat = ('' + v).split('.'); 
 			if(arFloat.length > 1 && arFloat[1].length > 2){				
 				v=Math.floor(v * 100) / 100
@@ -388,7 +389,7 @@ $(document).ready(function() {
 			}
         }
 
-        //¬ö¿ı¦¨ÁZ
+        //ç´€éŒ„æˆç¸¾
         var skill_index = eval('STRING_TABLE_SKILL.'+sid[1]);
         score.tScore[skill_index][nu] = v;
         $(this).val(v);
@@ -401,7 +402,7 @@ $(document).ready(function() {
 
     
 });
-//®ÉÄÁ¦P¨B
+//æ™‚é˜åŒæ­¥
 function syncTime(){
 	$.ajax({
 		url: 'clock.php',
@@ -413,16 +414,16 @@ function syncTime(){
 	setTimeout('syncTime()',60000);
 }
 
-//­Ë¼Æ­p®É
+//å€’æ•¸è¨ˆæ™‚
 var remain   = 0;
 function countDown(){
-	//³Ñ¾l®É¶¡ = 0 ´N¤£­Ë¼Æ
+	//å‰©é¤˜æ™‚é–“ = 0 å°±ä¸å€’æ•¸
 	if(remain <= 0){
-		$('#countdown').html('¨t²Î§Y±NÃö³¬¡A½ĞºÉ³t§¹¦¨µn°O¤Àµo§ÓÄ@');
+		$('#countdown').html('ç³»çµ±å³å°‡é—œé–‰ï¼Œè«‹ç›¡é€Ÿå®Œæˆç™»è¨˜åˆ†ç™¼å¿—é¡˜');
 		return;
 	}
 
-	//­Ë¼Æ­p®É
+	//å€’æ•¸è¨ˆæ™‚
     var rS = (remain % 60);
     var rM = Math.floor(remain/60);
     $("#cdownM").html(rM);
@@ -431,24 +432,24 @@ function countDown(){
     setTimeout("countDown()", 1000);
 }
 
-//¥Ø«e®É¶¡
+//ç›®å‰æ™‚é–“
 function clock(){
 	var d = new Date();
 	d.setTime(cTime);
 	var out = '';
 	var y = d.getFullYear() - 1911;
 	var mon = d.getMonth() + 1;
-	out += y+'¦~';
-	out += mon+'¤ë';
-	out += d.getUTCDate()+'¤é';
+	out += y+'å¹´';
+	out += mon+'æœˆ';
+	out += d.getUTCDate()+'æ—¥';
 	out += (d.getHours()+':').lpad('0',3);
 	out += (d.getUTCMinutes()+':').lpad('0',3);
 	out += (d.getSeconds()+'').lpad('0',2);
 
-	//¿é¥X
+	//è¼¸å‡º
 	$('#currTime').text(out);
 	cTime = d.valueOf() + 1000;
-	//¨C¬í­p®É
+	//æ¯ç§’è¨ˆæ™‚
 	setTimeout('clock()',1000);
 }
 
@@ -468,8 +469,8 @@ String.prototype.replaceIndex = function(idx, str) {
 }
 
 /**
- * ¬°¤FÁ×§K¤£¦PªºÂsÄı¾¹Math.round©MNumber.toFixedªºµ²ªG¤£¤@¼Ë
- * ©Ò¥H¦bNumber©³¤U·s¼W¤@­Ófunction
+ * ç‚ºäº†é¿å…ä¸åŒçš„ç€è¦½å™¨Math.roundå’ŒNumber.toFixedçš„çµæœä¸ä¸€æ¨£
+ * æ‰€ä»¥åœ¨Numberåº•ä¸‹æ–°å¢ä¸€å€‹function
  */
 Number.prototype.round = function(precision){
 	var addition = Math.pow(0.1,precision+5);
@@ -500,21 +501,21 @@ Number.prototype.round = function(precision){
             <div id='info' class="subcl">
               <!-- Information -->
               	<ul>
-		<li><a href="#info1" >°ò¥»¸ê®Æ</a></li>
-		<li><a href="#info2" >¦Ò¸Õ¤À¼Æ</a></li>
-		<li><a href="#info3" >³N¬ì¤À¼Æ</a></li>
+		<li><a href="#info1" >åŸºæœ¬è³‡æ–™</a></li>
+		<li><a href="#info2" >è€ƒè©¦åˆ†æ•¸</a></li>
+		<li><a href="#info3" >è¡“ç§‘åˆ†æ•¸</a></li>
 	</ul>
-	<!-- °ò¥»¸ê®Æ -->
+	<!-- åŸºæœ¬è³‡æ–™ -->
 	<div id='info1'>
 		<table style="height:85px;">
 			<tr>
 				<td class="td1" rowspan="3">
-				<b>°ò¥»¸ê®Æ</b>
+				<b>åŸºæœ¬è³‡æ–™</b>
 				</td>
 				<td>
-					<label for='sex1'>¨k</label>
+					<label for='sex1'>ç”·</label>
 						<input type="radio" class="cbx" name="sexz" id="sex1" value="1" checked="checked" />
-					<label for='sex2'>¤k</label>
+					<label for='sex2'>å¥³</label>
 						<input type="radio" class="cbx" name="sexz" id="sex2" value="2" /><br>
 					
 					
@@ -522,19 +523,19 @@ Number.prototype.round = function(precision){
 			</tr>
 			<tr>
 				<td>
-					<label for='id_type_ok'>¨­¥÷§O¡G</label>
+					<label for='id_type_ok'>èº«ä»½åˆ¥ï¼š</label>
 					<select id="id_type_ok">
-						<option value="1" selected="selected" >´¶³q¥Í</option>
-						<option value="2">°h¥î­x¤H</option>
-						<option value="4">­ì¦í¥Á</option>
-						<option value="C">»XÂÃ¥Í</option>
-						<option value="E">¹´¥Í</option>
-						<option value="G">¹Ò¥~Àu¨q¬ì§Ş¤H¤~¤l¤k</option>
-						<option value="X">¬F©²¬£¥~¤u§@¤H­û¤l¤k</option>
+						<option value="1" selected="selected" >æ™®é€šç”Ÿ</option>
+						<option value="2">é€€ä¼è»äºº</option>
+						<option value="4">åŸä½æ°‘</option>
+						<option value="C">è’™è—ç”Ÿ</option>
+						<option value="E">åƒ‘ç”Ÿ</option>
+						<option value="G">å¢ƒå¤–å„ªç§€ç§‘æŠ€äººæ‰å­å¥³</option>
+						<option value="X">æ”¿åºœæ´¾å¤–å·¥ä½œäººå“¡å­å¥³</option>
 					</select>  
-					<!--<label for='id_desclist'>¼W¥[Á`¤À</label> 
+					<!--<label for='id_desclist'>å¢åŠ ç¸½åˆ†</label> 
 					 <select id="id_desclist">					 
-					 	<option value="0" selected="selected" >µL</option>
+					 	<option value="0" selected="selected" >ç„¡</option>
 						<option value="0.03">3%</option>
 						<option value="0.05">5%</option>
 						<option value="0.08">8%</option>
@@ -550,62 +551,62 @@ Number.prototype.round = function(precision){
 			<tr>
 				<td>
 					<input type="checkbox" id="expert" name="expert" class="cbx" />
-					<label for='expert'>¾A¥Î¡uµn°O¤Àµo¤Î¤J¾Ç¸ê®æ¡v²Ä18´Ú³ø¦W¤§¦Ò¥Í</label><image id='expert_info' src='images/question.png' style='width:15px;cursor:pointer'></image>
+					<label for='expert'>é©ç”¨ã€Œç™»è¨˜åˆ†ç™¼åŠå…¥å­¸è³‡æ ¼ã€ç¬¬18æ¬¾å ±åä¹‹è€ƒç”Ÿ</label><image id='expert_info' src='images/question.png' style='width:15px;cursor:pointer'></image>
 				</td>
 			</tr>
 		</table>
 	</div>
-	<!-- ¦Ò¸Õ¤À¼Æ -->
+	<!-- è€ƒè©¦åˆ†æ•¸ -->
 	<div id='info2'>
-		<!-- ¾Ç´ú¤À¼Æ -->
+		<!-- å­¸æ¸¬åˆ†æ•¸ -->
 		
 		<table id='c_sco'>
 			<tr>
-				<td class="td1"><b>¾Ç´ú¯Å¤À:</b></td>
+				<td class="td1"><b>å­¸æ¸¬ç´šåˆ†:</b></td>
 													<td style='padding-top:7px;margin:0px;width:40px;'>
-					<div><input type="checkbox" id="basic0_ckb" class="cbx" />°ê¤å</div>
+					<div><input type="checkbox" id="basic0_ckb" class="cbx" />åœ‹æ–‡</div>
 					<div><input type="text" id="basic0" maxlength="2" value="0" size='3' disabled="disabled" /></div>
-				<!--	<div >°ê¤å</div>
+				<!--	<div >åœ‹æ–‡</div>
 										<div><input type="text" id="basic0" maxlength="2" value="0" size='3'  /></div> -->
 				</td>
 				
 													<td style='padding-top:7px;margin:0px;width:40px;'>
-					<div><input type="checkbox" id="basic1_ckb" class="cbx" />­^¤å</div>
+					<div><input type="checkbox" id="basic1_ckb" class="cbx" />è‹±æ–‡</div>
 					<div><input type="text" id="basic1" maxlength="2" value="0" size='3' disabled="disabled" /></div>
-				<!--	<div >­^¤å</div>
+				<!--	<div >è‹±æ–‡</div>
 										<div><input type="text" id="basic1" maxlength="2" value="0" size='3'  /></div> -->
 				</td>
 				
 													<td style='padding-top:7px;margin:0px;width:40px;'>
-					<div><input type="checkbox" id="basic2_ckb" class="cbx" />¼Æ¾Ç</div>
+					<div><input type="checkbox" id="basic2_ckb" class="cbx" />æ•¸å­¸</div>
 					<div><input type="text" id="basic2" maxlength="2" value="0" size='3' disabled="disabled" /></div>
-				<!--	<div >¼Æ¾Ç</div>
+				<!--	<div >æ•¸å­¸</div>
 										<div><input type="text" id="basic2" maxlength="2" value="0" size='3'  /></div> -->
 				</td>
 				
 													<td style='padding-top:7px;margin:0px;width:40px;'>
-					<div><input type="checkbox" id="basic3_ckb" class="cbx" />ªÀ·|</div>
+					<div><input type="checkbox" id="basic3_ckb" class="cbx" />ç¤¾æœƒ</div>
 					<div><input type="text" id="basic3" maxlength="2" value="0" size='3' disabled="disabled" /></div>
-				<!--	<div >ªÀ·|</div>
+				<!--	<div >ç¤¾æœƒ</div>
 										<div><input type="text" id="basic3" maxlength="2" value="0" size='3'  /></div> -->
 				</td>
 				
 													<td style='padding-top:7px;margin:0px;width:40px;'>
-					<div><input type="checkbox" id="basic4_ckb" class="cbx" />¦ÛµM</div>
+					<div><input type="checkbox" id="basic4_ckb" class="cbx" />è‡ªç„¶</div>
 					<div><input type="text" id="basic4" maxlength="2" value="0" size='3' disabled="disabled" /></div>
-				<!--	<div >¦ÛµM</div>
+				<!--	<div >è‡ªç„¶</div>
 										<div><input type="text" id="basic4" maxlength="2" value="0" size='3'  /></div> -->
 				</td>
 				
-								<td class="td1"><b>­^»yÅ¥¤O¦¨ÁZ:</b></td>
+								<td class="td1"><b>è‹±èªè½åŠ›æˆç¸¾:</b></td>
 				<td>
 					<select id="listen">
-						<option value="-" selected="selected" >µL</option>	
-						<option value="A">¢Ï¯Å</option>
-						<option value="B">¢Ğ¯Å</option>
-						<option value="C">¢Ñ¯Å</option>
-						<option value="F">¢Ô¯Å</option>
-						<option value="O">§KÀË©w</option>											
+						<option value="-" selected="selected" >ç„¡</option>	
+						<option value="A">ï¼¡ç´š</option>
+						<option value="B">ï¼¢ç´š</option>
+						<option value="C">ï¼£ç´š</option>
+						<option value="F">ï¼¦ç´š</option>
+						<option value="O">å…æª¢å®š</option>											
 					</select>
 				</td>
 			</tr>
@@ -614,110 +615,110 @@ Number.prototype.round = function(precision){
 		<table id='s_sco'>
 			<tr>
 				<td>
-				<b>«ü¦Ò¦¨ÁZ:</b>
+				<b>æŒ‡è€ƒæˆç¸¾:</b>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam0" class="cbx" />°ê¤å</div>
+					<div><input type="checkbox" id="exam0" class="cbx" />åœ‹æ–‡</div>
 					<div><input type="text" id="exam0_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam1" class="cbx" />­^¤å</div>
+					<div><input type="checkbox" id="exam1" class="cbx" />è‹±æ–‡</div>
 					<div><input type="text" id="exam1_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam2" class="cbx" />¼Æ¾Ç¥Ò</div>
+					<div><input type="checkbox" id="exam2" class="cbx" />æ•¸å­¸ç”²</div>
 					<div><input type="text" id="exam2_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam3" class="cbx" />¼Æ¾Ç¤A</div>
+					<div><input type="checkbox" id="exam3" class="cbx" />æ•¸å­¸ä¹™</div>
 					<div><input type="text" id="exam3_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam4" class="cbx" />¾ú¥v</div>
+					<div><input type="checkbox" id="exam4" class="cbx" />æ­·å²</div>
 					<div><input type="text" id="exam4_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam5" class="cbx" />¦a²z</div>
+					<div><input type="checkbox" id="exam5" class="cbx" />åœ°ç†</div>
 					<div><input type="text" id="exam5_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam6" class="cbx" />ª«²z</div>
+					<div><input type="checkbox" id="exam6" class="cbx" />ç‰©ç†</div>
 					<div><input type="text" id="exam6_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam7" class="cbx" />¤Æ¾Ç</div>
+					<div><input type="checkbox" id="exam7" class="cbx" />åŒ–å­¸</div>
 					<div><input type="text" id="exam7_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam8" class="cbx" />¥Íª«</div>
+					<div><input type="checkbox" id="exam8" class="cbx" />ç”Ÿç‰©</div>
 					<div><input type="text" id="exam8_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 								<td style='padding:0px;margin:0px;'>
-					<div><input type="checkbox" id="exam9" class="cbx" />¤½¥Á»PªÀ·|</div>
+					<div><input type="checkbox" id="exam9" class="cbx" />å…¬æ°‘èˆ‡ç¤¾æœƒ</div>
 					<div><input type="text" id="exam9_score" maxlength="5" value="0" size='3' disabled="disabled" /></div>
 				</td>
 							</tr>
 		</table>
 	</div>
-	<!-- ³N¬ì¤À¼Æ -->
+	<!-- è¡“ç§‘åˆ†æ•¸ -->
 	<div id='info3'>
 	<table id='t_sco'>
 		<tr>
-			<td rowspan="3" style='width:64px;height:81px;'><b>³N¬ì¦¨ÁZ:</b></td>
-			<td style='width:28px'>­µ¼Ö</td>
+			<td rowspan="3" style='width:64px;height:81px;'><b>è¡“ç§‘æˆç¸¾:</b></td>
+			<td style='width:28px'>éŸ³æ¨‚</td>
 						<td style='padding:0px;margin:0px;'>
-				<span><input type="checkbox" class="cbx" id='music0' />¥D­×</span>
+				<span><input type="checkbox" class="cbx" id='music0' />ä¸»ä¿®</span>
 	 	      	<input name="text" type="text" class='ipx' id="music0_score" value="0" size="2" maxlength="5" disabled="disabled" />
 			</td>
 						<td style='padding:0px;margin:0px;'>
-				<span><input type="checkbox" class="cbx" id='music1' />°Æ­×</span>
+				<span><input type="checkbox" class="cbx" id='music1' />å‰¯ä¿®</span>
 	 	      	<input name="text" type="text" class='ipx' id="music1_score" value="0" size="2" maxlength="5" disabled="disabled" />
 			</td>
 						<td style='padding:0px;margin:0px;'>
-				<span><input type="checkbox" class="cbx" id='music2' />¼Ö²z</span>
+				<span><input type="checkbox" class="cbx" id='music2' />æ¨‚ç†</span>
 	 	      	<input name="text" type="text" class='ipx' id="music2_score" value="0" size="2" maxlength="5" disabled="disabled" />
 			</td>
 						<td style='padding:0px;margin:0px;'>
-				<span><input type="checkbox" class="cbx" id='music3' />µø°Û</span>
+				<span><input type="checkbox" class="cbx" id='music3' />è¦–å”±</span>
 	 	      	<input name="text" type="text" class='ipx' id="music3_score" value="0" size="2" maxlength="5" disabled="disabled" />
 			</td>
 						<td style='padding:0px;margin:0px;'>
-				<span><input type="checkbox" class="cbx" id='music4' />Å¥¼g</span>
+				<span><input type="checkbox" class="cbx" id='music4' />è½å¯«</span>
 	 	      	<input name="text" type="text" class='ipx' id="music4_score" value="0" size="2" maxlength="5" disabled="disabled" />
 			</td>
 					</tr>
 		<tr>
-			<td>¬ü³N</td>
+			<td>ç¾è¡“</td>
 						<td style='padding:0px;margin:0px;width:118px;'>
-				<span><input type="checkbox" class="cbx" id='art0' />¯À´y</span>
+				<span><input type="checkbox" class="cbx" id='art0' />ç´ æ</span>
 				<span><input type="text"  class='ipx' id='art0_score' value="0" size="2" maxlength="5" disabled="disabled" />
 				</span>
 			</td>
 						<td style='padding:0px;margin:0px;width:118px;'>
-				<span><input type="checkbox" class="cbx" id='art1' />³Ğ·Nªí²{</span>
+				<span><input type="checkbox" class="cbx" id='art1' />å‰µæ„è¡¨ç¾</span>
 				<span><input type="text"  class='ipx' id='art1_score' value="0" size="2" maxlength="5" disabled="disabled" />
 				</span>
 			</td>
 						<td style='padding:0px;margin:0px;width:118px;'>
-				<span><input type="checkbox" class="cbx" id='art2' />¬ü³NÅ²½à</span>
+				<span><input type="checkbox" class="cbx" id='art2' />ç¾è¡“é‘‘è³</span>
 				<span><input type="text"  class='ipx' id='art2_score' value="0" size="2" maxlength="5" disabled="disabled" />
 				</span>
 			</td>
 						<td style='padding:0px;margin:0px;width:118px;'>
-				<span><input type="checkbox" class="cbx" id='art3' />±mÃ¸§Şªk</span>
+				<span><input type="checkbox" class="cbx" id='art3' />å½©ç¹ªæŠ€æ³•</span>
 				<span><input type="text"  class='ipx' id='art3_score' value="0" size="2" maxlength="5" disabled="disabled" />
 				</span>
 			</td>
 						<td style='padding:0px;margin:0px;width:118px;'>
-				<span><input type="checkbox" class="cbx" id='art4' />¤ô¾¥®Ñµe</span>
+				<span><input type="checkbox" class="cbx" id='art4' />æ°´å¢¨æ›¸ç•«</span>
 				<span><input type="text"  class='ipx' id='art4_score' value="0" size="2" maxlength="5" disabled="disabled" />
 				</span>
 			</td>
 					</tr>
 		<tr>
-			<td>Åé¨|</td>
+			<td>é«”è‚²</td>
 			<td style='padding:0px;margin:0px;width:118px;'>
-				<span><input type="checkbox" id="sport0" class="cbx" />Åé¨|</span>
+				<span><input type="checkbox" id="sport0" class="cbx" />é«”è‚²</span>
 				<span><input type="text"  class='ipx' id='sport0_score' value="0" size="2" maxlength="5" disabled="disabled" /></span>
 			</td>
 			<td colspan='4'>&nbsp;</td>
@@ -729,14 +730,14 @@ Number.prototype.round = function(precision){
         </div>
       </div>
       <div id="nav"><!--
-                    <marquee scrolldelay="120" scrollamount="4" style='width: 750px;'>²¾°Ê§ÓÄ@¶¶§Ç¥Î·Æ¹«©ì¦²§Y¥i¡D¡D¡D¡D<b style='color:red'>¤£²Å¦X¿ı¨ú±ø¥óªÌ·|¥H¬õ¦rÅã¥Ü</b>¡D¡D¡D¡D§R°£§ÓÄ@½ĞÂI·Æ¹«¥ªÁä¨â¤U¡D¡D¡D¡D</marquee>
+                    <marquee scrolldelay="120" scrollamount="4" style='width: 750px;'>ç§»å‹•å¿—é¡˜é †åºç”¨æ»‘é¼ æ‹–æ›³å³å¯ï¼ï¼ï¼ï¼<b style='color:red'>ä¸ç¬¦åˆéŒ„å–æ¢ä»¶è€…æœƒä»¥ç´…å­—é¡¯ç¤º</b>ï¼ï¼ï¼ï¼åˆªé™¤å¿—é¡˜è«‹é»æ»‘é¼ å·¦éµå…©ä¸‹ï¼ï¼ï¼ï¼</marquee>
               --></div>
       <div id="main">
         <div id='selevolinfo'>&nbsp;</div>
-<!-- ³æ¾÷ª©/½m²ßª© -->
+<!-- å–®æ©Ÿç‰ˆ/ç·´ç¿’ç‰ˆ -->
 <ul>
-    <li><a href="#layer1" class='mainTab' >§ÓÄ@¿ï¶ñ</a></li>
-    <li><a href="#layer2" class='mainTab' id='createVol'>²£¥Í§ÓÄ@½X</a></li>
+    <li><a href="#layer1" class='mainTab' >å¿—é¡˜é¸å¡«</a></li>
+    <li><a href="#layer2" class='mainTab' id='createVol'>ç”¢ç”Ÿå¿—é¡˜ç¢¼</a></li>
     <li>
     	<div id='countdown'>
 		    <div id="marquee">
@@ -746,33 +747,33 @@ Number.prototype.round = function(precision){
 			</div>
 		<div>
 	</li>
-    <li style='float:right'><input type='button' class='trash' id='clearVol' value='§R°£¼È¦sÀÉ'></input></li>
+    <li style='float:right'><input type='button' class='trash' id='clearVol' value='åˆªé™¤æš«å­˜æª”'></input></li>
 </ul>
 
 	          
-      	<!--  §ÓÄ@¿ï¶ñµe­± -->
+      	<!--  å¿—é¡˜é¸å¡«ç•«é¢ -->
       	<div id='layer1'>
       					<div>
 			<form name="check100Form" method="post" action="">
-			<button name='school_dept_info' id='school_dept_info'>¨Ì®Õ¨t¿ï§ÓÄ@</button>
-			<button name='select_vol' id='select_vol'>¨Ì±ø¥ó¿ï§ÓÄ@</button>
-			<button name='add_one_vol' id='add_one_vol'>ª½±µ¿é¤J¨t²Õ¥N½X</button>
-			<button name='pasteVol' id='pasteVol'>¶K¤W§ÓÄ@½X</button>				
-			<button name='clearScreen' id='clearScreen'>§R°£¥ş³¡§ÓÄ@</button>
-			<button name='printScreen' id='printScreen'>¦C¦L¦¹­¶</button>
+			<button name='school_dept_info' id='school_dept_info'>ä¾æ ¡ç³»é¸å¿—é¡˜</button>
+			<button name='select_vol' id='select_vol'>ä¾æ¢ä»¶é¸å¿—é¡˜</button>
+			<button name='add_one_vol' id='add_one_vol'>ç›´æ¥è¼¸å…¥ç³»çµ„ä»£ç¢¼</button>
+			<button name='pasteVol' id='pasteVol'>è²¼ä¸Šå¿—é¡˜ç¢¼</button>				
+			<button name='clearScreen' id='clearScreen'>åˆªé™¤å…¨éƒ¨å¿—é¡˜</button>
+			<button name='printScreen' id='printScreen'>åˆ—å°æ­¤é </button>
 			</form>
 			</div>
 			<span id="addMsg"></span><br/>
 				      	<div id='volun' style="">
 	      	</div>
       	</div>
-      	<!-- ²£¥Í§ÓÄ@½X -->
+      	<!-- ç”¢ç”Ÿå¿—é¡˜ç¢¼ -->
       	<div id='layer2' class='hide'>
-      		<p>¥i¥H½Æ»s¤U¤è§ÓÄ@¸ê®Æ¡A¥H¨Ñµn¤Jµn°O¤Àµo§ÓÄ@¨t²Î«á¤W¶Ç§ÓÄ@½X¨Ï¥Î</p>
+      		<p>å¯ä»¥è¤‡è£½ä¸‹æ–¹å¿—é¡˜è³‡æ–™ï¼Œä»¥ä¾›ç™»å…¥ç™»è¨˜åˆ†ç™¼å¿—é¡˜ç³»çµ±å¾Œä¸Šå‚³å¿—é¡˜ç¢¼ä½¿ç”¨</p>
       		<textarea id="vol_data" name="vol_data" cols="70" rows="6" readonly="readonly"></textarea><br/>
-      		<button id='l2_goweb' value="" >«e©¹ºô¸ôµn°O¤Àµo§ÓÄ@</button>
+      		<button id='l2_goweb' value="" >å‰å¾€ç¶²è·¯ç™»è¨˜åˆ†ç™¼å¿—é¡˜</button>
       		<span id="d_clip_container">
-      		    <button id='l2_copy' title='­YµLªk¨Ï¥Î¿ï¨ú½Æ»s¥\¯à¡A½Ğ¨Ï¥Î§Ö±¶Áä(Ctrl+c)½Æ»s§ÓÄ@½X'>¿ï¨ú½Æ»s</button>
+      		    <button id='l2_copy' title='è‹¥ç„¡æ³•ä½¿ç”¨é¸å–è¤‡è£½åŠŸèƒ½ï¼Œè«‹ä½¿ç”¨å¿«æ·éµ(Ctrl+c)è¤‡è£½å¿—é¡˜ç¢¼'>é¸å–è¤‡è£½</button>
             </span>
       	</div>
 
@@ -784,52 +785,52 @@ Number.prototype.round = function(precision){
     </div>
   </div>
 
-  <!-- ¡y¨ä¥L¿ï³æ¡z  -->
+  <!-- ã€å…¶ä»–é¸å–®ã€  -->
 
-  <!-- ¨Ì®Õ¨t¿ï§ÓÄ@2 -->
-  <div id="div_list_dept" title="¨Ì®Õ¨t¿ï§ÓÄ@">
-    <label for='list_school'>¾Ç®Õ¡G</label><select id='list_school'></select>
+  <!-- ä¾æ ¡ç³»é¸å¿—é¡˜2 -->
+  <div id="div_list_dept" title="ä¾æ ¡ç³»é¸å¿—é¡˜">
+    <label for='list_school'>å­¸æ ¡ï¼š</label><select id='list_school'></select>
     <hr style="clear:both" />
     <br/>
     <dl style="text-align:left;height:350px;overflow-y:auto;">
-        <!-- ®Õ¨t¿ï³æ -->
+        <!-- æ ¡ç³»é¸å–® -->
     </dl>
   </div>
     
-  <!-- ª½±µ¿é¤J®Õ¨t¥N½X -->
-  <div id="div_one_canid" class="optionalMenu" title='ª½±µ¿é¤J¨t²Õ¥N½X'>
+  <!-- ç›´æ¥è¼¸å…¥æ ¡ç³»ä»£ç¢¼ -->
+  <div id="div_one_canid" class="optionalMenu" title='ç›´æ¥è¼¸å…¥ç³»çµ„ä»£ç¢¼'>
     <dl>       
         <dd><input type="text" maxlength="4" id="iptCanID" name="iptCanID" style='margin:5px;'/></dd>
         <div id='one_canid_info' style='padding-left: 8px'></div>
     </dl>
   </div>
 
-  <!-- ¨Ì±ø¥ó¿ï§ÓÄ@ -->
-  <div id="filterArea" class="optionalMenu" title='¨Ì±ø¥ó¿ï§ÓÄ@'>
+  <!-- ä¾æ¢ä»¶é¸å¿—é¡˜ -->
+  <div id="filterArea" class="optionalMenu" title='ä¾æ¢ä»¶é¸å¿—é¡˜'>
     <ul class='ul_inline' >
 	    <li style='background:#fff;width:290px;height:350px;border:1px solid #000;'>   	
 	       <form id='myFilterForm' name='myFilterForm' action="" style='padding:0px;margin:0px;'>
-	           <!-- ±Æª© -->
+	           <!-- æ’ç‰ˆ -->
 	           <ul id='myFilter'>
 					<li>
-					    <label for='filter_school'>¾Ç®Õ</label><select id='filter_school' name='filter_school'></select>
+					    <label for='filter_school'>å­¸æ ¡</label><select id='filter_school' name='filter_school'></select>
 					</li>
-					<li><label for='filter_gcd'>¾Ç¸s</label><select id='filter_gcd' name='filter_gcd'></select></li>
-					<li><label for='filter_mcd'>¾ÇÃş</label><select id='filter_mcd' name='filter_mcd'></select></li>
-					<li>±Ä­p¬ì¥Ø²Õ¦X</li>
+					<li><label for='filter_gcd'>å­¸ç¾¤</label><select id='filter_gcd' name='filter_gcd'></select></li>
+					<li><label for='filter_mcd'>å­¸é¡</label><select id='filter_mcd' name='filter_mcd'></select></li>
+					<li>æ¡è¨ˆç§‘ç›®çµ„åˆ</li>
 					<li>
 					    <div id='filter_pattern'>
-					        <input type='checkbox' id='pattern_select_all' />¿ï¨ú¥ş³¡²Õ¦X
+					        <input type='checkbox' id='pattern_select_all' />é¸å–å…¨éƒ¨çµ„åˆ
 							&nbsp
-							<button  type="button" name='partial_subject' id= 'partial_subject'>¬ì¥Ø¹LÂo</button>
+							<button  type="button" name='partial_subject' id= 'partial_subject'>ç§‘ç›®éæ¿¾</button>
 							<span id='ps_msg'></span>  				    	
 					        <ul id='pattern_entries'>
 					        </ul>
 					    </div>
 					</li>
 					<li>
-					    <button id='doFilter'>¶}©l¿z¿ï</button>
-					    <input type="checkbox" name='helpMe' id='helpMe'/>À°§Ú¹LÂo
+					    <button id='doFilter'>é–‹å§‹ç¯©é¸</button>
+					    <input type="checkbox" name='helpMe' id='helpMe'/>å¹«æˆ‘éæ¿¾
 					</li>
 	           </ul>
 	       </form>
@@ -840,66 +841,66 @@ Number.prototype.round = function(precision){
     </ul>
   </div>
 
-  <!-- Åã¥Ü§ÓÄ@©ú²Ó -->
-  <div id="showmsg" title="ª`·N"></div>
+  <!-- é¡¯ç¤ºå¿—é¡˜æ˜ç´° -->
+  <div id="showmsg" title="æ³¨æ„"></div>
   
-  <!-- Åã¥Ü§ÓÄ@©ú²Ó -->
+  <!-- é¡¯ç¤ºå¿—é¡˜æ˜ç´° -->
   <div id="showVolInfo"></div>
 
-  <!-- ½Æ»s§ÓÄ@ -->
+  <!-- è¤‡è£½å¿—é¡˜ -->
   <div id="cloneVolDIV"></div>
-  <!--  ¶K¤W§ÓÄ@½X -->
-  <div id='pasteVolDIV' class="optionalMenu" title='¶K¤W§ÓÄ@½X'>
-	<p>­Y¦Ò¥Í¤w©ó³æ¾÷ª©²£¥Í§ÓÄ@½X¡A¥i©ó¦¹³B¶K¤W¤w¿ï§ÓÄ@¡C</p>
+  <!--  è²¼ä¸Šå¿—é¡˜ç¢¼ -->
+  <div id='pasteVolDIV' class="optionalMenu" title='è²¼ä¸Šå¿—é¡˜ç¢¼'>
+	<p>è‹¥è€ƒç”Ÿå·²æ–¼å–®æ©Ÿç‰ˆç”¢ç”Ÿå¿—é¡˜ç¢¼ï¼Œå¯æ–¼æ­¤è™•è²¼ä¸Šå·²é¸å¿—é¡˜ã€‚</p>
 	<textarea name="inputVolTextarea" id='inputVolTextarea' cols="70" rows="6" style='height:120px;'></textarea><br/>
-	<input type="button" id='pasteVoluns' value="½T©w" />
-	<input type="button" id='cancelPaste' class='restore' value="¨ú®ø" />
-	<input type="button" id='winPaste' value="¶K¤W§ÓÄ@½X" title='­YµLªk¨Ï¥Î¶K¤W§ÓÄ@½X¥\¯à¡A½Ğ¨Ï¥Î§Ö±¶Áä(Ctrl+v)¶K¤W§ÓÄ@½X'/>
+	<input type="button" id='pasteVoluns' value="ç¢ºå®š" />
+	<input type="button" id='cancelPaste' class='restore' value="å–æ¶ˆ" />
+	<input type="button" id='winPaste' value="è²¼ä¸Šå¿—é¡˜ç¢¼" title='è‹¥ç„¡æ³•ä½¿ç”¨è²¼ä¸Šå¿—é¡˜ç¢¼åŠŸèƒ½ï¼Œè«‹ä½¿ç”¨å¿«æ·éµ(Ctrl+v)è²¼ä¸Šå¿—é¡˜ç¢¼'/>
   </div>
-  <div id='stud_name_info' style='display:none' title="´£¿ô">
-  	­Y±zªº©m¦W¥X²{¶Ã½X¡A½Ğ®Ö¹ï¥k°¼°ò¥»¸ê®Æ¥¿½TµL»~§Y¥i;<br/>
-  	©Î½Ğ<a href="http://www2.uac.edu.tw/108data/108FONTS.msi" target="_blank"><span style='color:#CC6600;font-size:16px;font-weight:bolder'>«ö¦¹¤U¸ü</span></a> 
-  	¨Ã¦w¸Ë³y¦rÀÉ¡C
+  <div id='stud_name_info' style='display:none' title="æé†’">
+  	è‹¥æ‚¨çš„å§“åå‡ºç¾äº‚ç¢¼ï¼Œè«‹æ ¸å°å³å´åŸºæœ¬è³‡æ–™æ­£ç¢ºç„¡èª¤å³å¯;<br/>
+  	æˆ–è«‹<a href="http://www2.uac.edu.tw/108data/108FONTS.msi" target="_blank"><span style='color:#CC6600;font-size:16px;font-weight:bolder'>æŒ‰æ­¤ä¸‹è¼‰</span></a> 
+  	ä¸¦å®‰è£é€ å­—æª”ã€‚
   </div>
-  <div id='leave_check' style='display:none' title="µn¥X½T»{">
-  	¬O§_¼È¦s§ÓÄ@?
+  <div id='leave_check' style='display:none' title="ç™»å‡ºç¢ºèª">
+  	æ˜¯å¦æš«å­˜å¿—é¡˜?
   </div> 
   <div id='dialog_msg'>
   	
   </div>
   
-  <!-- 108¾Ç¦~«×·s¼W-¦Ò¥Í©|¥¼§¹¦¨µn°O -->
-  <div class='chg_stusco_dia' id='change_stud_score1' style='display:none' title="¦¨ÁZ½Æ¬dµ²ªG²§°Ê">
+  <!-- 108å­¸å¹´åº¦æ–°å¢-è€ƒç”Ÿå°šæœªå®Œæˆç™»è¨˜ -->
+  <div class='chg_stusco_dia' id='change_stud_score1' style='display:none' title="æˆç¸¾è¤‡æŸ¥çµæœç•°å‹•">
   	<p>
-  		<span class='chg_stusco_dia_highlight'>±zªº«ü¦Ò¦¨ÁZ¸g½Æ¬dµ²ªG¦³ÅÜ§ó</span>
-  		¡A²{¤w§¹¦¨¸ê®Æ§ó·s¡A½Ğ¨Ì§ó·s«á¦¨ÁZ§¹¦¨§ÓÄ@¿ï¶ñ¡A
-  		<span class='chg_stusco_dia_highlight'>§¹¦¨«á¤£±o¦AÅÜ§ó§ÓÄ@¡C</span>
+  		<span class='chg_stusco_dia_highlight'>æ‚¨çš„æŒ‡è€ƒæˆç¸¾ç¶“è¤‡æŸ¥çµæœæœ‰è®Šæ›´</span>
+  		ï¼Œç¾å·²å®Œæˆè³‡æ–™æ›´æ–°ï¼Œè«‹ä¾æ›´æ–°å¾Œæˆç¸¾å®Œæˆå¿—é¡˜é¸å¡«ï¼Œ
+  		<span class='chg_stusco_dia_highlight'>å®Œæˆå¾Œä¸å¾—å†è®Šæ›´å¿—é¡˜ã€‚</span>
   	</p>
-	<p>¦p¹ï«áÄòµn°O¬yµ{¦³ºÃ°İ¡A¥i¬¢¸ß¦Ò¤À·|¡]TEL:06-2362755¡^¡A</p>
-	<p>¦p¹ï¦¨ÁZ½Æ¬dµ²ªG¦³²§Ä³¡A½Ğ¥t¬¢¤j¾Ç¤J¾Ç¦Ò¸Õ¤¤¤ß(TEL:02-23661416)¡A¦¨ÁZ²§°Ê¤º®e¦p¤U¡G</p>
+	<p>å¦‚å°å¾ŒçºŒç™»è¨˜æµç¨‹æœ‰ç–‘å•ï¼Œå¯æ´½è©¢è€ƒåˆ†æœƒï¼ˆTEL:06-2362755ï¼‰ï¼Œ</p>
+	<p>å¦‚å°æˆç¸¾è¤‡æŸ¥çµæœæœ‰ç•°è­°ï¼Œè«‹å¦æ´½å¤§å­¸å…¥å­¸è€ƒè©¦ä¸­å¿ƒ(TEL:02-23661416)ï¼Œæˆç¸¾ç•°å‹•å…§å®¹å¦‚ä¸‹ï¼š</p>
 	<p class='chg_stusco_dia_result'></p>
 	
 
   </div>
   	
-  <!-- 108¾Ç¦~«×·s¼W-¦Ò¥Í¤w§¹¦¨µn°O -->
-  <div class='chg_stusco_dia' id='change_stud_score2' style='display:none'  title="¦¨ÁZ½Æ¬dµ²ªG²§°Ê">
+  <!-- 108å­¸å¹´åº¦æ–°å¢-è€ƒç”Ÿå·²å®Œæˆç™»è¨˜ -->
+  <div class='chg_stusco_dia' id='change_stud_score2' style='display:none'  title="æˆç¸¾è¤‡æŸ¥çµæœç•°å‹•">
   	<p>
-  		<span class='chg_stusco_dia_highlight'>±zªº«ü¦Ò¦¨ÁZ¸g½Æ¬dµ²ªG¦³ÅÜ§ó</span>
-  		¡A½Ğ½T¹ê¤F¸Ñ¦¨ÁZ²§°Ê¤º®e¨Ã
-  		<span class='chg_stusco_dia_highlight'>©ó7/28¤U¤È4:30«e¦^¶Ç¬O§_ÅÜ§ó§ÓÄ@¤§Án©ú®Ñ¦Ü¦Ò¤À·|</span>
-  		¡A¬ÛÃö¬yµ{½Ğ°Ñ¾\Án©ú®Ñ½d¥»©Î¬¢¸ß¦Ò¤À·|¡]TEL:06-2362755¡^¡C
+  		<span class='chg_stusco_dia_highlight'>æ‚¨çš„æŒ‡è€ƒæˆç¸¾ç¶“è¤‡æŸ¥çµæœæœ‰è®Šæ›´</span>
+  		ï¼Œè«‹ç¢ºå¯¦äº†è§£æˆç¸¾ç•°å‹•å…§å®¹ä¸¦
+  		<span class='chg_stusco_dia_highlight'>æ–¼7/28ä¸‹åˆ4:30å‰å›å‚³æ˜¯å¦è®Šæ›´å¿—é¡˜ä¹‹è²æ˜æ›¸è‡³è€ƒåˆ†æœƒ</span>
+  		ï¼Œç›¸é—œæµç¨‹è«‹åƒé–±è²æ˜æ›¸ç¯„æœ¬æˆ–æ´½è©¢è€ƒåˆ†æœƒï¼ˆTEL:06-2362755ï¼‰ã€‚
   	</p>
-	<p>¦p¹ï¦¨ÁZ½Æ¬dµ²ªG¦³²§Ä³¡A½Ğ¥t¬¢¤j¾Ç¤J¾Ç¦Ò¸Õ¤¤¤ß(TEL:02-23661416)¡A¦¨ÁZ²§°Ê¤º®e¦p¤U¡G</p>
+	<p>å¦‚å°æˆç¸¾è¤‡æŸ¥çµæœæœ‰ç•°è­°ï¼Œè«‹å¦æ´½å¤§å­¸å…¥å­¸è€ƒè©¦ä¸­å¿ƒ(TEL:02-23661416)ï¼Œæˆç¸¾ç•°å‹•å…§å®¹å¦‚ä¸‹ï¼š</p>
 	<p class='chg_stusco_dia_result'></p>
 	<div style='text-align: center'>
 		
-		<input type='button' id='chgsco_form1_btn' class='chg_stusco_dia_download' name='giveup1' value='¤U¸ü©ñ±óÅÜ§ó§ÓÄ@Án©ú®Ñ½d¥»'>
+		<input type='button' id='chgsco_form1_btn' class='chg_stusco_dia_download' name='giveup1' value='ä¸‹è¼‰æ”¾æ£„è®Šæ›´å¿—é¡˜è²æ˜æ›¸ç¯„æœ¬'>
 	</div>
 	<div style='text-align: center'>		
-		<input type='button' id='chgsco_form2_btn' class='chg_stusco_dia_download' name='giveup2' value='¤U¸üµù¾P§ÓÄ@­«·sµn°OÁn©ú®Ñ½d¥»'>
+		<input type='button' id='chgsco_form2_btn' class='chg_stusco_dia_download' name='giveup2' value='ä¸‹è¼‰è¨»éŠ·å¿—é¡˜é‡æ–°ç™»è¨˜è²æ˜æ›¸ç¯„æœ¬'>
 	</div>	
-¡@                 
+ã€€                 
   </div>
       
 </body>
