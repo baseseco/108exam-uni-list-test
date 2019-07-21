@@ -1,0 +1,1 @@
+start iexplore file:\\\%cd%\index.html
